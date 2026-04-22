@@ -105,11 +105,6 @@
   overflow: hidden;
 }
 
-/* ── Front face ── */
-.front {
-  background: #e8d5a3;
-}
-
 .imgWrapper {
   position: relative;
   width: 100%;
