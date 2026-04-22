@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import styles from './FeedbackBanner.module.css';
 
 interface Props {
@@ -12,10 +13,14 @@ export default function FeedbackBanner({ onNext, isLast, variant = 'default' }: 
   return (
     <div className={styles.banner}>
       <div className={styles.left}>
-        <svg className={styles.icon} viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <circle cx="12" cy="12" r="10" fill="rgba(255,255,255,0.25)" />
-          <path d="M7 12.5l3.5 3.5 6.5-7" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
+        <Image
+          src="/solar_confetti-bold-duotone.svg"
+          alt=""
+          width={36}
+          height={36}
+          className={styles.icon}
+          aria-hidden
+        />
         {variant === 'quiz' ? (
           <div>
             <div className={styles.quizTitle}>THAT&apos;S RIGHT!</div>
@@ -24,6 +29,14 @@ export default function FeedbackBanner({ onNext, isLast, variant = 'default' }: 
         ) : (
           <span className={styles.correctText}>Correct!</span>
         )}
+        <Image
+          src="/Sparkle.svg"
+          alt=""
+          width={22}
+          height={22}
+          className={styles.sparkle}
+          aria-hidden
+        />
       </div>
       <button className={styles.nextBtn} onClick={onNext}>
         {isLast ? 'Finish' : 'Next →'}

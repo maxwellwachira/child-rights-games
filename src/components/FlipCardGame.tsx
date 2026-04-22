@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import type { FlipCardData } from '@/types';
+import { playCorrectSound, playWrongSound } from '@/utils/sounds';
 import styles from './FlipCardGame.module.css';
 
 interface Props {
@@ -48,9 +49,11 @@ export default function FlipCardGame({ cards }: Props) {
   function handleSelect(opt: string) {
     if (correct !== null || wrongFlash !== null) return;
     if (opt === card.correctAnswer) {
+      playCorrectSound();
       setCorrect(opt);
       if (!completed.has(current)) setScore((s) => s + 1);
     } else {
+      playWrongSound();
       setWrongFlash(opt);
       setTimeout(() => setWrongFlash(null), 800);
     }

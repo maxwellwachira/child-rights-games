@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import type { MatchItem, QuizQuestion } from '@/types';
+import { playCorrectSound, playWrongSound } from '@/utils/sounds';
 import ProgressBar from './ProgressBar';
 import FeedbackBanner from './FeedbackBanner';
 import styles from './MultipleChoiceGame.module.css';
@@ -42,9 +43,11 @@ export default function MultipleChoiceGame({
   function handleSelect(option: string) {
     if (correct !== null || wrongFlash !== null) return;
     if (option === item.correctAnswer) {
+      playCorrectSound();
       setCorrect(option);
       if (!hadWrongAttempt) setScore((s) => s + 1);
     } else {
+      playWrongSound();
       setHadWrongAttempt(true);
       setWrongFlash(option);
       setTimeout(() => setWrongFlash(null), 800);

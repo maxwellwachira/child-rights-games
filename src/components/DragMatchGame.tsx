@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import type { DragMatchItem } from '@/types';
+import { playCorrectSound, playWrongSound } from '@/utils/sounds';
 import styles from './DragMatchGame.module.css';
 
 interface Props {
@@ -53,10 +54,12 @@ export default function DragMatchGame({ title, subtitle, items, variant = 'text'
     const descItem = items.find((x) => x.id === id)!;
 
     if (termItem.description === descItem.description) {
+      playCorrectSound();
       setMatches((m) => ({ ...m, [selectedTerm]: id }));
       setSelectedTerm(null);
       setWrongPair(null);
     } else {
+      playWrongSound();
       setWrongPair([selectedTerm, id]);
       setTimeout(() => {
         setWrongPair(null);
