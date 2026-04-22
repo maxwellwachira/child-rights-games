@@ -3,6 +3,7 @@ import type { FlipCardData, MatchItem, QuizQuestion, DragMatchItem } from '@/typ
 export const flipCards: FlipCardData[] = [
   {
     id: 1,
+    imageSrc: '/game_assets/right_to_education.png',
     imageAlt: 'Children going to school',
     question: 'What right is this?',
     options: ['Right to Education', 'Rights for Children with Disability and Support', 'Right to Identity'],
@@ -11,6 +12,7 @@ export const flipCards: FlipCardData[] = [
   },
   {
     id: 2,
+    imageSrc: '/game_assets/right_to_safety_and_protection.png',
     imageAlt: 'Child protected from harm',
     question: 'What right is this?',
     options: ['Right to Safety and Protection', 'Right to Play and Rest', 'Right to Basic Needs'],
@@ -19,6 +21,7 @@ export const flipCards: FlipCardData[] = [
   },
   {
     id: 3,
+    imageSrc: '/game_assets/right_to_fair_treatment.png',
     imageAlt: 'All children treated equally',
     question: 'What right is this?',
     options: ['Right to Health Care', 'Right to Fair Treatment', 'Right to Self-Expression'],
@@ -27,6 +30,7 @@ export const flipCards: FlipCardData[] = [
   },
   {
     id: 4,
+    imageSrc: '/game_assets/right_to_play_and_rest.png',
     imageAlt: 'Children playing outdoors',
     question: 'What right is this?',
     options: ['Right to Education', 'Right to Family and Care', 'Right to Play and Rest'],
@@ -35,6 +39,7 @@ export const flipCards: FlipCardData[] = [
   },
   {
     id: 5,
+    imageSrc: '/game_assets/right_to_special_support.png',
     imageAlt: 'Child with disability supported in class',
     question: 'What right is this?',
     options: ['Right to a Name and Identity', 'Right to Special Support', 'Right to Self-Expression'],
@@ -111,19 +116,19 @@ export const matchResponsibilities: DragMatchItem[] = [
     id: 1,
     term: 'Caring about your family',
     description: 'Children should be kind and helpful to their family. This means listening to parents and caregivers, helping in small ways at home, and showing respect for older people (like grandparents).',
-    imageSrc: undefined,
+    imageSrc: '/game_assets/caring_about_your_family.png',
   },
   {
     id: 2,
     term: 'Treating others with respect',
     description: 'Children should treat everyone kindly and fairly, no matter who they are. This means not hurting others, speaking politely, and respecting other people\'s beliefs, differences, and rights.',
-    imageSrc: undefined,
+    imageSrc: '/game_assets/treating_others_respect.png',
   },
   {
     id: 3,
     term: 'Protecting the environment',
     description: 'Children should try to look after nature. This means not wasting water or food, keeping your surroundings clean, and caring for animals and plants.',
-    imageSrc: undefined,
+    imageSrc: '/game_assets/protecting_the_environment.png',
   },
 ];
 
