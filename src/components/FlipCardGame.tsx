@@ -8,73 +8,81 @@ import styles from './FlipCardGame.module.css';
 
 type Phase = 'front' | 'question' | 'explanation';
 
+interface CardState {
+  phase: Phase;
+  correct: string | null;
+  wrongFlash: string | null;
+}
+
+const PAIR = 2;
+
 export default function FlipCardGame({ cards }: { cards: FlipCardData[] }) {
-  const [current, setCurrent] = useState(0);
-  const [phase, setPhase] = useState<Phase>('front');
-  const [wrongFlash, setWrongFlash] = useState<string | null>(null);
-  const [correct, setCorrect] = useState<string | null>(null);
+  const totalPairs = Math.ceil(cards.length / PAIR);
+
+  const [states, setStates] = useState<CardState[]>(() =>
+    cards.map(() => ({ phase: 'front', correct: null, wrongFlash: null }))
+  );
+  const [pairIdx, setPairIdx] = useState(0);
+  const [completed, setCompleted] = useState<Set<number>>(new Set());
   const [score, setScore] = useState(0);
   const [done, setDone] = useState(false);
-  const [completed, setCompleted] = useState<Set<number>>(new Set());
 
-  const card = cards[current];
-  const isFlipped = phase === 'question' || phase === 'explanation';
+  const leftIdx = pairIdx * PAIR;
+  const rightIdx = pairIdx * PAIR + 1;
+  const hasRight = rightIdx < cards.length;
+  const pairDone =
+    completed.has(leftIdx) && (!hasRight || completed.has(rightIdx));
 
-  function navigateTo(index: number) {
-    if (index === current) return;
-    setCurrent(index);
-    setPhase('front');
-    setCorrect(null);
-    setWrongFlash(null);
+  function patch(idx: number, update: Partial<CardState>) {
+    setStates((prev) =>
+      prev.map((s, i) => (i === idx ? { ...s, ...update } : s))
+    );
   }
 
-  function handleChestClick() {
-    if (phase === 'front') setPhase('question');
+  function handleChestClick(idx: number) {
+    if (states[idx].phase === 'front') patch(idx, { phase: 'question' });
   }
 
-  function handleFlipLink() {
-    if (phase === 'explanation') {
-      goToNext();
-    } else if (correct !== null) {
-      setPhase('explanation');
-      setCompleted((prev) => new Set([...prev, current]));
-    } else {
-      setPhase('front');
-    }
-  }
-
-  function handleSelect(opt: string) {
-    if (correct !== null || wrongFlash !== null) return;
-    if (opt === card.correctAnswer) {
+  function handleSelect(idx: number, opt: string) {
+    const s = states[idx];
+    if (s.correct !== null || s.wrongFlash !== null) return;
+    if (opt === cards[idx].correctAnswer) {
       playCorrectSound();
-      setCorrect(opt);
-      if (!completed.has(current)) setScore((s) => s + 1);
+      patch(idx, { correct: opt });
+      if (!completed.has(idx)) setScore((n) => n + 1);
     } else {
       playWrongSound();
-      setWrongFlash(opt);
-      setTimeout(() => setWrongFlash(null), 800);
+      patch(idx, { wrongFlash: opt });
+      setTimeout(() => patch(idx, { wrongFlash: null }), 800);
     }
   }
 
-  function goToNext() {
-    if (current + 1 >= cards.length) {
+  function handleFlipLink(idx: number) {
+    const s = states[idx];
+    if (s.phase === 'explanation') {
+      setCompleted((prev) => new Set([...prev, idx]));
+    } else if (s.correct !== null) {
+      patch(idx, { phase: 'explanation' });
+      setCompleted((prev) => new Set([...prev, idx]));
+    } else {
+      patch(idx, { phase: 'front' });
+    }
+  }
+
+  function handleNext() {
+    if (pairIdx + 1 >= totalPairs) {
       setDone(true);
     } else {
-      setCurrent((c) => c + 1);
-      setPhase('front');
-      setCorrect(null);
-      setWrongFlash(null);
+      setPairIdx((p) => p + 1);
     }
   }
 
   function handleRestart() {
-    setCurrent(0);
-    setPhase('front');
-    setCorrect(null);
-    setWrongFlash(null);
+    setStates(cards.map(() => ({ phase: 'front', correct: null, wrongFlash: null })));
+    setPairIdx(0);
+    setCompleted(new Set());
     setScore(0);
     setDone(false);
-    setCompleted(new Set());
   }
 
   if (done) {
@@ -112,91 +120,110 @@ export default function FlipCardGame({ cards }: { cards: FlipCardData[] }) {
           Can you identify all of the child rights?&nbsp; Click on the treasure chest to play
         </p>
 
-        <div className={styles.filmstrip}>
-          {cards.map((c, i) => (
-            <button
-              key={c.id}
-              className={`${styles.thumb} ${i === current ? styles.thumbActive : ''} ${completed.has(i) ? styles.thumbDone : ''}`}
-              onClick={() => navigateTo(i)}
-              aria-label={`Card ${i + 1}`}
+        {/* Pair progress dots */}
+        <div className={styles.dots}>
+          {Array.from({ length: totalPairs }).map((_, i) => (
+            <span
+              key={i}
+              className={`${styles.dot} ${i === pairIdx ? styles.dotActive : ''} ${i * PAIR < leftIdx ? styles.dotDone : ''}`}
             />
           ))}
         </div>
 
-        <div className={styles.scene}>
-          <div className={`${styles.card} ${isFlipped ? styles.cardFlipped : ''}`}>
-            {/* FRONT FACE */}
-            <div className={`${styles.face} ${styles.front}`}>
-              <div className={styles.imgWrapper}>
-                {card.imageSrc ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={card.imageSrc} alt={card.imageAlt} className={styles.cardImg} />
-                ) : (
-                  <div className={styles.imgPlaceholder}>
-                    <span>{card.imageAlt}</span>
-                  </div>
-                )}
-                <button
-                  className={styles.chestBtn}
-                  onClick={handleChestClick}
-                  aria-label="Click the treasure chest to reveal the right"
-                >
-                  <Image
-                    src="/game_assets/treasure_box.png"
-                    alt=""
-                    width={96}
-                    height={67}
-                    className={styles.chestImg}
-                    aria-hidden
-                  />
-                </button>
-              </div>
-            </div>
+        {/* Two-card grid */}
+        <div className={styles.pairGrid}>
+          {[leftIdx, rightIdx].map((idx) => {
+            if (idx >= cards.length) return null;
+            const card = cards[idx];
+            const s = states[idx];
+            const isFlipped = s.phase === 'question' || s.phase === 'explanation';
+            const isSolo = !hasRight;
 
-            {/* BACK FACE */}
-            <div className={`${styles.face} ${styles.back}`}>
-              {phase === 'explanation' ? (
-                <>
-                  <div className={styles.explanationTitle}>{card.correctAnswer}</div>
-                  <div className={styles.explanationBody}>{card.explanation}</div>
-                  <button className={styles.flipLink} onClick={handleFlipLink}>
-                    Click here to flip card
-                  </button>
-                </>
-              ) : (
-                <>
-                  <div className={styles.question}>{card.question}</div>
-                  <div className={styles.options}>
-                    {card.options.map((opt) => {
-                      let cls = styles.optionBtn;
-                      if (correct === opt) cls = `${styles.optionBtn} ${styles.optionCorrect}`;
-                      else if (wrongFlash === opt) cls = `${styles.optionBtn} ${styles.optionWrong}`;
-                      return (
+            return (
+              <div key={card.id} className={`${styles.cardSlot} ${isSolo ? styles.cardSlotSolo : ''}`}>
+                <div className={styles.scene}>
+                  <div className={`${styles.card} ${isFlipped ? styles.cardFlipped : ''}`}>
+
+                    {/* FRONT */}
+                    <div className={`${styles.face} ${styles.front}`}>
+                      <div className={styles.imgWrapper}>
+                        {card.imageSrc ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={card.imageSrc} alt={card.imageAlt} className={styles.cardImg} />
+                        ) : (
+                          <div className={styles.imgPlaceholder}>{card.imageAlt}</div>
+                        )}
                         <button
-                          key={opt}
-                          className={cls}
-                          onClick={() => handleSelect(opt)}
-                          disabled={correct !== null || wrongFlash !== null}
+                          className={styles.chestBtn}
+                          onClick={() => handleChestClick(idx)}
+                          aria-label="Click the treasure chest to reveal the right"
                         >
-                          {opt}
+                          <Image
+                            src="/game_assets/treasure_box.png"
+                            alt=""
+                            width={38}
+                            height={27}
+                            className={styles.chestImg}
+                            aria-hidden
+                          />
                         </button>
-                      );
-                    })}
+                      </div>
+                    </div>
+
+                    {/* BACK */}
+                    <div className={`${styles.face} ${styles.back}`}>
+                      {s.phase === 'explanation' ? (
+                        <>
+                          <div className={styles.explanationTitle}>{card.correctAnswer}</div>
+                          <div className={styles.explanationBody}>{card.explanation}</div>
+                          <button className={styles.flipLink} onClick={() => handleFlipLink(idx)}>
+                            Click here to flip card
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <div className={styles.question}>{card.question}</div>
+                          <div className={styles.options}>
+                            {card.options.map((opt) => {
+                              let cls = styles.optionBtn;
+                              if (s.correct === opt) cls = `${styles.optionBtn} ${styles.optionCorrect}`;
+                              else if (s.wrongFlash === opt) cls = `${styles.optionBtn} ${styles.optionWrong}`;
+                              return (
+                                <button
+                                  key={opt}
+                                  className={cls}
+                                  onClick={() => handleSelect(idx, opt)}
+                                  disabled={s.correct !== null || s.wrongFlash !== null}
+                                >
+                                  {opt}
+                                </button>
+                              );
+                            })}
+                          </div>
+                          {s.correct !== null && <div className={styles.correctFeedback}>Correct! ✨</div>}
+                          {s.wrongFlash !== null && <div className={styles.wrongFeedback}>Try again</div>}
+                          <button className={styles.flipLink} onClick={() => handleFlipLink(idx)}>
+                            Click here to flip card
+                          </button>
+                        </>
+                      )}
+                    </div>
+
                   </div>
-                  {correct !== null && <div className={styles.correctFeedback}>Correct! ✨</div>}
-                  {wrongFlash !== null && <div className={styles.wrongFeedback}>Try again</div>}
-                  <button className={styles.flipLink} onClick={handleFlipLink}>
-                    Click here to flip card
-                  </button>
-                </>
-              )}
-            </div>
-          </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
 
-        <div className={styles.stats}>
-          <span>Card <strong>{current + 1}</strong> of {cards.length}</span>
-          <span>Score: <strong>{score}</strong></span>
+        {/* Bottom bar */}
+        <div className={styles.bottomBar}>
+          <span className={styles.scoreText}>Score: <strong>{score}</strong></span>
+          {pairDone && (
+            <button className={styles.nextBtn} onClick={handleNext}>
+              {pairIdx + 1 >= totalPairs ? 'See results' : 'Next →'}
+            </button>
+          )}
         </div>
       </div>
     </div>
