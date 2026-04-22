@@ -1,0 +1,28 @@
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 0 1.5rem;
+  height: 56px;
+  display: flex;
+  align-items: center;
+}
+
+.site-logo {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  text-decoration: none;
+  letter-spacing: -0.01em;
+}
+
+.site-logo:hover {
+  color: #22c55e;
+}
+
+.site-main {
+  min-height: calc(100vh - 56px);
+  background: #f9fafb;
+}

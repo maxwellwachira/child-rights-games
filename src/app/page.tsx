@@ -1,66 +1,56 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import Link from 'next/link';
+import styles from './page.module.css';
+
+const games = [
+  {
+    href: '/flip-cards',
+    title: 'Flip Card Quiz',
+    desc: 'Flip cards to reveal rights and choose the correct answer.',
+  },
+  {
+    href: '/match-rights',
+    title: 'Match the Rights',
+    desc: 'Read each description and pick the child right it describes.',
+  },
+  {
+    href: '/match-responsibilities',
+    title: 'Match Responsibilities',
+    desc: 'With great rights come great responsibilities — match them!',
+  },
+  {
+    href: '/quiz',
+    title: 'Ready, Set… Quiz!',
+    desc: 'Test your knowledge of child rights with 8 quick questions.',
+  },
+  {
+    href: '/match-violence',
+    title: 'Match the Types of Violence',
+    desc: 'Learn to identify different types of violence and what protects you.',
+  },
+  {
+    href: '/match-rights-protection',
+    title: "Children's Rights",
+    desc: 'Match each right to the protection it gives you.',
+  },
+];
 
 export default function Home() {
   return (
     <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      <h1 className={styles.title}>Child Rights Games</h1>
+      <p className={styles.subtitle}>
+        In Kenya all children have rights. Play these games to learn what they are,
+        why they matter, and how to protect them.
+      </p>
+      <div className={styles.grid}>
+        {games.map((g, i) => (
+          <Link key={g.href} href={g.href} className={styles.card}>
+            <div className={styles.cardNumber}>{i + 1}</div>
+            <div className={styles.cardTitle}>{g.title}</div>
+            <div className={styles.cardDesc}>{g.desc}</div>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }

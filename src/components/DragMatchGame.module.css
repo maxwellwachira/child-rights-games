@@ -1,0 +1,314 @@
+.wrapper {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.heading {
+  font-size: 1.6rem;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 0.4rem;
+  color: #1a1a1a;
+  line-height: 1.3;
+}
+
+.subheading {
+  text-align: center;
+  color: #555;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+/* ── Two-column layout ── */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.layoutImage {
+  grid-template-columns: 220px 1fr;
+}
+
+@media (max-width: 640px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+  .layoutImage {
+    grid-template-columns: 1fr;
+  }
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* ── Text variant term buttons (match-violence) ── */
+.termBtn {
+  padding: 1rem 1.1rem;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  background: #d8e1eb;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: center;
+  color: #1a1a1a;
+  transition: border-color 0.15s;
+  user-select: none;
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.termBtn:hover:not(:disabled) {
+  border-color: #22c55e;
+}
+
+/* ── Peach variant term buttons (children's rights) ── */
+.termPeach {
+  padding: 1rem 1.1rem;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  background: #fce8d5;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  color: #1a1a1a;
+  transition: border-color 0.15s;
+  user-select: none;
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.termPeach:hover:not(:disabled) {
+  border-color: #22c55e;
+}
+
+/* ── Shared term state modifiers ── */
+.termSelected {
+  border-color: #22c55e !important;
+  background: inherit;
+}
+
+.termMatched {
+  border-color: #22c55e !important;
+  opacity: 0.7;
+  cursor: default;
+}
+
+.termWrong {
+  border-color: #ef4444 !important;
+}
+
+/* ── Text variant description cards (match-violence) ── */
+.descCard {
+  padding: 0.9rem 1.1rem;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  background: #d8e1eb;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.15s;
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+}
+
+.descCard:hover:not(.descMatched) {
+  border-color: #22c55e;
+}
+
+/* ── Beige description cards (match-responsibilities) ── */
+.descBeige {
+  padding: 0.9rem 1.1rem;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  background: #fef3e8;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #333;
+  cursor: pointer;
+  transition: border-color 0.15s;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+}
+
+.descBeige:hover:not(.descMatched) {
+  border-color: #22c55e;
+}
+
+/* ── Peach description cards (children's rights) ── */
+.descPeach {
+  padding: 0.9rem 1.1rem;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  background: #fce8d5;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.15s;
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+}
+
+.descPeach:hover:not(.descMatched) {
+  border-color: #22c55e;
+}
+
+/* ── Shared description state modifiers ── */
+.descMatched {
+  border-color: #22c55e !important;
+  opacity: 0.75;
+  cursor: default;
+}
+
+.descWrong {
+  border-color: #ef4444 !important;
+}
+
+/* ── Image tile (match-responsibilities left column) ── */
+.imageTile {
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 3px solid transparent;
+  transition: border-color 0.15s;
+  background: #f0e6d3;
+}
+
+.imageTileSelected {
+  border-color: #22c55e;
+}
+
+.imageTileMatched {
+  border-color: #22c55e;
+  opacity: 0.75;
+  cursor: default;
+}
+
+.imageTileWrong {
+  border-color: #ef4444;
+}
+
+.tileImgArea {
+  width: 100%;
+  height: 160px;
+  overflow: hidden;
+}
+
+.tileImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.tilePlaceholder {
+  width: 100%;
+  height: 100%;
+  background: #fdf6ec;
+  border-bottom: 1px dashed #c8a96e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.tilePlaceholderText {
+  font-size: 0.88rem;
+  color: #a37c4c;
+  text-align: center;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.tileLabel {
+  background: #f97316;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.88rem;
+  text-align: center;
+  padding: 0.55rem 0.75rem;
+  line-height: 1.3;
+}
+
+/* ── Actions ── */
+.actions {
+  margin-top: 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.hint {
+  font-size: 0.85rem;
+  color: #888;
+}
+
+.checkBtn {
+  background: #22c55e;
+  color: #fff;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 999px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.checkBtn:hover {
+  background: #16a34a;
+}
+
+/* ── Completion ── */
+.complete {
+  text-align: center;
+  padding: 3rem 1.5rem;
+}
+
+.completeTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #22c55e;
+  margin-bottom: 1rem;
+}
+
+.completeScore {
+  font-size: 1.1rem;
+  color: #555;
+  margin-bottom: 2rem;
+}
+
+.restartBtn {
+  background: #22c55e;
+  color: #fff;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 999px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.restartBtn:hover {
+  background: #16a34a;
+}
