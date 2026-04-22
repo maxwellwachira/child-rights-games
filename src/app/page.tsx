@@ -4,8 +4,8 @@ import styles from './page.module.css';
 const games = [
   {
     href: '/flip-cards',
-    title: 'Flip Card Quiz',
-    desc: 'Flip cards to reveal rights and choose the correct answer.',
+    title: 'Treasure Hunt',
+    desc: 'Can you identify all of the child rights? Click the treasure chest to play.',
   },
   {
     href: '/match-rights',

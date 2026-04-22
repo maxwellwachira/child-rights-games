@@ -46,6 +46,24 @@ export const flipCards: FlipCardData[] = [
     correctAnswer: 'Right to Special Support',
     explanation: 'All children with disabilities have a right to accommodation and resources to help them learn and participate fully in society.',
   },
+  {
+    id: 6,
+    imageSrc: '/game_assets/right_to_family_and_care.png',
+    imageAlt: 'Family sharing a meal together',
+    question: 'What right is this?',
+    options: ['Right to Basic Needs', 'Right to Family and Care', 'Right to Health Care'],
+    correctAnswer: 'Right to Family and Care',
+    explanation: 'Every child has a family to take care of them. This can be their parents, or if parents cannot care for the child, another loving family.',
+  },
+  {
+    id: 7,
+    imageSrc: '/game_assets/right_to_health_care.png',
+    imageAlt: 'Child receiving medical care from a doctor',
+    question: 'What right is this?',
+    options: ['Right to Family and Care', 'Right to Special Support', 'Right to Health Care'],
+    correctAnswer: 'Right to Health Care',
+    explanation: 'Every child can get help to be healthy, like seeing a doctor, getting medicine, having proper nutrition, and managing their mental health.',
+  },
 ];
 
 export const matchRightsItems: MatchItem[] = [

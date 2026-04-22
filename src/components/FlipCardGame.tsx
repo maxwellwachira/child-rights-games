@@ -1,17 +1,14 @@
 'use client';
 
+import Image from 'next/image';
 import { useState } from 'react';
 import type { FlipCardData } from '@/types';
 import { playCorrectSound, playWrongSound } from '@/utils/sounds';
 import styles from './FlipCardGame.module.css';
 
-interface Props {
-  cards: FlipCardData[];
-}
-
 type Phase = 'front' | 'question' | 'explanation';
 
-export default function FlipCardGame({ cards }: Props) {
+export default function FlipCardGame({ cards }: { cards: FlipCardData[] }) {
   const [current, setCurrent] = useState(0);
   const [phase, setPhase] = useState<Phase>('front');
   const [wrongFlash, setWrongFlash] = useState<string | null>(null);
@@ -31,11 +28,11 @@ export default function FlipCardGame({ cards }: Props) {
     setWrongFlash(null);
   }
 
-  function handleFlip() {
+  function handleChestClick() {
     if (phase === 'front') setPhase('question');
   }
 
-  function handleBackFlipLink() {
+  function handleFlipLink() {
     if (phase === 'explanation') {
       goToNext();
     } else if (correct !== null) {
@@ -82,12 +79,23 @@ export default function FlipCardGame({ cards }: Props) {
 
   if (done) {
     return (
-      <div className={styles.wrapper}>
-        <div className={styles.complete}>
-          <div className={styles.completeTitle}>Well done!</div>
-          <p className={styles.completeMsg}>
-            You identified {score} out of {cards.length} rights correctly.
-          </p>
+      <div className={styles.page}>
+        <h1 className={styles.gameTitle}>Game: Treasure hunt!</h1>
+        <div className={styles.parchment}>
+          <p className={styles.congratsTitle}>Congratulations!</p>
+          <p className={styles.congratsMsg}>You have completed the treasure hunt</p>
+          <div className={styles.completionGrid}>
+            {cards.map((c) => (
+              <div key={c.id} className={styles.completionCard}>
+                {c.imageSrc ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={c.imageSrc} alt={c.imageAlt} className={styles.completionImg} />
+                ) : (
+                  <div className={styles.completionPlaceholder}>{c.imageAlt}</div>
+                )}
+              </div>
+            ))}
+          </div>
           <button className={styles.restartBtn} onClick={handleRestart}>
             Play again
           </button>
@@ -97,89 +105,99 @@ export default function FlipCardGame({ cards }: Props) {
   }
 
   return (
-    <div className={styles.wrapper}>
-      <div className={styles.filmstrip}>
-        {cards.map((c, i) => (
-          <button
-            key={c.id}
-            className={`${styles.thumb} ${i === current ? styles.thumbActive : ''} ${completed.has(i) ? styles.thumbDone : ''}`}
-            onClick={() => navigateTo(i)}
-            aria-label={`Card ${i + 1}`}
-          />
-        ))}
-      </div>
+    <div className={styles.page}>
+      <h1 className={styles.gameTitle}>Game: Treasure hunt!</h1>
+      <div className={styles.parchment}>
+        <p className={styles.subtitle}>
+          Can you identify all of the child rights?&nbsp; Click on the treasure chest to play
+        </p>
 
-      <div className={styles.scene}>
-        <div className={`${styles.card} ${isFlipped ? styles.cardFlipped : ''}`}>
-          {/* FRONT FACE */}
-          <div className={`${styles.face} ${styles.front}`}>
-            <div className={styles.cardImgArea}>
-              {card.imageSrc ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={card.imageSrc} alt={card.imageAlt} className={styles.cardImg} />
+        <div className={styles.filmstrip}>
+          {cards.map((c, i) => (
+            <button
+              key={c.id}
+              className={`${styles.thumb} ${i === current ? styles.thumbActive : ''} ${completed.has(i) ? styles.thumbDone : ''}`}
+              onClick={() => navigateTo(i)}
+              aria-label={`Card ${i + 1}`}
+            />
+          ))}
+        </div>
+
+        <div className={styles.scene}>
+          <div className={`${styles.card} ${isFlipped ? styles.cardFlipped : ''}`}>
+            {/* FRONT FACE */}
+            <div className={`${styles.face} ${styles.front}`}>
+              <div className={styles.imgWrapper}>
+                {card.imageSrc ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={card.imageSrc} alt={card.imageAlt} className={styles.cardImg} />
+                ) : (
+                  <div className={styles.imgPlaceholder}>
+                    <span>{card.imageAlt}</span>
+                  </div>
+                )}
+                <button
+                  className={styles.chestBtn}
+                  onClick={handleChestClick}
+                  aria-label="Click the treasure chest to reveal the right"
+                >
+                  <Image
+                    src="/game_assets/treasure_box.png"
+                    alt=""
+                    width={96}
+                    height={67}
+                    className={styles.chestImg}
+                    aria-hidden
+                  />
+                </button>
+              </div>
+            </div>
+
+            {/* BACK FACE */}
+            <div className={`${styles.face} ${styles.back}`}>
+              {phase === 'explanation' ? (
+                <>
+                  <div className={styles.explanationTitle}>{card.correctAnswer}</div>
+                  <div className={styles.explanationBody}>{card.explanation}</div>
+                  <button className={styles.flipLink} onClick={handleFlipLink}>
+                    Click here to flip card
+                  </button>
+                </>
               ) : (
-                <div className={styles.imgPlaceholder}>
-                  <span className={styles.imgPlaceholderText}>{card.imageAlt}</span>
-                </div>
+                <>
+                  <div className={styles.question}>{card.question}</div>
+                  <div className={styles.options}>
+                    {card.options.map((opt) => {
+                      let cls = styles.optionBtn;
+                      if (correct === opt) cls = `${styles.optionBtn} ${styles.optionCorrect}`;
+                      else if (wrongFlash === opt) cls = `${styles.optionBtn} ${styles.optionWrong}`;
+                      return (
+                        <button
+                          key={opt}
+                          className={cls}
+                          onClick={() => handleSelect(opt)}
+                          disabled={correct !== null || wrongFlash !== null}
+                        >
+                          {opt}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {correct !== null && <div className={styles.correctFeedback}>Correct! ✨</div>}
+                  {wrongFlash !== null && <div className={styles.wrongFeedback}>Try again</div>}
+                  <button className={styles.flipLink} onClick={handleFlipLink}>
+                    Click here to flip card
+                  </button>
+                </>
               )}
             </div>
-            <button className={styles.flipLink} onClick={handleFlip}>
-              Click here to flip card
-            </button>
-          </div>
-
-          {/* BACK FACE */}
-          <div className={`${styles.face} ${styles.back}`}>
-            {phase === 'explanation' ? (
-              <>
-                <div className={styles.explanationTitle}>{card.correctAnswer}</div>
-                <div className={styles.explanationBody}>{card.explanation}</div>
-                <button className={styles.flipLink} onClick={handleBackFlipLink}>
-                  Click here to flip card
-                </button>
-              </>
-            ) : (
-              <>
-                <div className={styles.question}>{card.question}</div>
-                <div className={styles.options}>
-                  {card.options.map((opt) => {
-                    let cls = styles.optionBtn;
-                    if (correct === opt) cls = `${styles.optionBtn} ${styles.optionCorrect}`;
-                    else if (wrongFlash === opt) cls = `${styles.optionBtn} ${styles.optionWrong}`;
-                    return (
-                      <button
-                        key={opt}
-                        className={cls}
-                        onClick={() => handleSelect(opt)}
-                        disabled={correct !== null || wrongFlash !== null}
-                      >
-                        {opt}
-                      </button>
-                    );
-                  })}
-                </div>
-                {correct !== null && (
-                  <div className={styles.correctFeedback}>Correct!</div>
-                )}
-                {wrongFlash !== null && (
-                  <div className={styles.wrongFeedback}>Try again</div>
-                )}
-                <button className={styles.flipLink} onClick={handleBackFlipLink}>
-                  Click here to flip card
-                </button>
-              </>
-            )}
           </div>
         </div>
-      </div>
 
-      <div className={styles.stats}>
-        <span>
-          Card <strong className={styles.statsValue}>{current + 1}</strong> of {cards.length}
-        </span>
-        <span>
-          Score: <strong className={styles.statsValue}>{score}</strong>
-        </span>
+        <div className={styles.stats}>
+          <span>Card <strong>{current + 1}</strong> of {cards.length}</span>
+          <span>Score: <strong>{score}</strong></span>
+        </div>
       </div>
     </div>
   );

@@ -1,48 +1,76 @@
-.wrapper {
-  max-width: 420px;
+.page {
+  max-width: 720px;
   margin: 0 auto;
-  padding: 2rem 1.5rem;
+  padding: 1.5rem 1rem 3rem;
+}
+
+.gameTitle {
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin-bottom: 1.25rem;
+}
+
+/* ── Parchment ── */
+.parchment {
+  background-image: url('/game_assets/parchment_frame.png');
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 2.5rem 3rem 2.75rem;
+}
+
+.subtitle {
+  text-align: center;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #2c5f6e;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
 }
 
 /* ── Filmstrip ── */
 .filmstrip {
   display: flex;
   gap: 0.5rem;
-  margin-bottom: 1.5rem;
   justify-content: center;
+  margin-bottom: 1.25rem;
 }
 
 .thumb {
-  width: 62px;
-  height: 46px;
-  border: 2px dashed #c8a96e;
-  border-radius: 8px;
-  background: #fdf6ec;
+  width: 54px;
+  height: 38px;
+  border: 2px dashed #8b6914;
+  border-radius: 6px;
+  background: rgba(255, 240, 175, 0.5);
   cursor: pointer;
-  transition: border-color 0.15s, background 0.15s;
+  transition: all 0.15s;
   padding: 0;
 }
 
 .thumb:hover {
-  background: #f5e8d0;
+  background: rgba(255, 220, 110, 0.7);
 }
 
 .thumbActive {
-  border: 3px solid #a37c4c;
-  background: #f5e8d0;
+  border: 2.5px solid #5a3e10;
+  background: rgba(255, 210, 90, 0.85);
 }
 
 .thumbDone {
-  border: 2px solid #22c55e;
-  background: #dcfce7;
+  border: 2px solid #16a34a;
+  background: rgba(220, 252, 231, 0.85);
 }
 
 /* ── 3D Scene ── */
 .scene {
   perspective: 1200px;
   width: 100%;
-  height: 400px;
-  margin: 0 auto 1.25rem;
+  height: 440px;
+  margin-bottom: 1.25rem;
 }
 
 .card {
@@ -50,38 +78,32 @@
   height: 100%;
   position: relative;
   transform-style: preserve-3d;
-  transition: transform 0.6s ease;
+  transition: transform 0.65s ease;
 }
 
 .cardFlipped {
   transform: rotateY(180deg);
 }
 
-/* ── Shared face styles ── */
+/* ── Shared face ── */
 .face {
   position: absolute;
   inset: 0;
-  border-radius: 16px;
-  border: 2px dashed #c8a96e;
+  border-radius: 12px;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  display: flex;
-  flex-direction: column;
   overflow: hidden;
 }
 
 /* ── Front face ── */
 .front {
-  background: #fdf6ec;
-  padding: 1rem 1rem 0.75rem;
-  gap: 0.75rem;
+  background: #111;
 }
 
-.cardImgArea {
-  flex: 1;
-  min-height: 0;
-  border-radius: 10px;
-  overflow: hidden;
+.imgWrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
 }
 
 .cardImg {
@@ -95,74 +117,79 @@
   width: 100%;
   height: 100%;
   background: #f0e6d3;
-  border: 1px dashed #c8a96e;
-  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
+  color: #a37c4c;
+  font-weight: 600;
+  text-align: center;
   padding: 1rem;
+  font-size: 1rem;
 }
 
-.imgPlaceholderText {
-  font-size: 0.9rem;
-  color: #a37c4c;
-  text-align: center;
-  font-weight: 600;
-  line-height: 1.4;
+/* ── Treasure chest ── */
+.chestBtn {
+  position: absolute;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chestImg {
+  width: 96px;
+  height: auto;
+  animation: treasurePulse 1.8s ease-in-out infinite;
+}
+
+@keyframes treasurePulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 6px #ffd700) drop-shadow(0 0 14px rgba(255, 160, 0, 0.75));
+    transform: scale(1);
+  }
+  50% {
+    filter: drop-shadow(0 0 16px #ffd700) drop-shadow(0 0 32px rgba(255, 150, 0, 0.9)) drop-shadow(0 0 48px rgba(34, 197, 94, 0.55));
+    transform: scale(1.14);
+  }
 }
 
 /* ── Back face ── */
 .back {
   background: #fdf6ec;
   transform: rotateY(180deg);
-  padding: 1.25rem 1rem 0.75rem;
-  gap: 0;
+  padding: 1.5rem 1.25rem 1rem;
+  display: flex;
+  flex-direction: column;
   text-align: center;
-  justify-content: flex-start;
 }
 
 .question {
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 700;
   color: #1a1a1a;
-  margin-bottom: 0.85rem;
-  text-align: center;
-}
-
-.explanationTitle {
-  font-size: 1.05rem;
-  font-weight: 800;
-  color: #1a1a1a;
-  margin-bottom: 0.75rem;
-  text-align: center;
-}
-
-.explanationBody {
-  flex: 1;
-  font-size: 0.9rem;
-  color: #444;
-  line-height: 1.6;
-  text-align: center;
-  overflow-y: auto;
-  padding: 0 0.25rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .options {
   display: flex;
   flex-direction: column;
-  gap: 0.45rem;
-  margin-bottom: 0.5rem;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
 }
 
 .optionBtn {
-  padding: 0.55rem 0.9rem;
-  border: 1px solid #d1d5db;
+  padding: 0.6rem 1rem;
+  border: 1.5px solid #d1d5db;
   border-radius: 8px;
   background: #fff;
   cursor: pointer;
-  font-size: 0.88rem;
-  text-align: center;
+  font-size: 0.9rem;
   color: #222;
   transition: border-color 0.12s, background 0.12s;
   line-height: 1.35;
@@ -191,30 +218,43 @@
 }
 
 .correctFeedback {
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   font-weight: 700;
   color: #16a34a;
-  text-align: center;
   margin-bottom: 0.25rem;
 }
 
 .wrongFeedback {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: #dc2626;
-  text-align: center;
   margin-bottom: 0.25rem;
+}
+
+.explanationTitle {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin-bottom: 0.75rem;
+}
+
+.explanationBody {
+  flex: 1;
+  font-size: 0.88rem;
+  color: #444;
+  line-height: 1.6;
+  overflow-y: auto;
+  margin-bottom: 0.75rem;
 }
 
 .flipLink {
   background: none;
   border: none;
   color: #a37c4c;
-  font-size: 0.82rem;
+  font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
-  padding: 0.3rem 0;
-  text-align: center;
+  padding: 0.25rem 0;
   margin-top: auto;
   text-decoration: underline;
   text-underline-offset: 2px;
@@ -230,45 +270,77 @@
   justify-content: center;
   gap: 2rem;
   font-size: 0.9rem;
-  color: #555;
+  color: #5a3e10;
 }
 
-.statsValue {
+.stats strong {
   font-weight: 700;
-  color: #22c55e;
+  color: #3a2510;
 }
 
 /* ── Completion ── */
-.complete {
+.congratsTitle {
   text-align: center;
-  padding: 3rem 1rem;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin-bottom: 0.4rem;
 }
 
-.completeTitle {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: #22c55e;
-  margin-bottom: 0.75rem;
-}
-
-.completeMsg {
+.congratsMsg {
+  text-align: center;
   font-size: 1rem;
-  color: #555;
+  font-weight: 600;
+  color: #3a2e10;
   margin-bottom: 1.5rem;
 }
 
+.completionGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1.75rem;
+}
+
+.completionCard {
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid #8b6914;
+}
+
+.completionImg {
+  width: 100%;
+  height: 130px;
+  object-fit: cover;
+  display: block;
+}
+
+.completionPlaceholder {
+  height: 130px;
+  background: #f0e6d3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #a37c4c;
+  font-size: 0.75rem;
+  text-align: center;
+  padding: 0.5rem;
+}
+
 .restartBtn {
-  background: #22c55e;
+  display: block;
+  margin: 0 auto;
+  background: #7a5c1e;
   color: #fff;
   border: none;
-  padding: 0.75rem 2rem;
+  padding: 0.75rem 2.25rem;
   border-radius: 999px;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   transition: background 0.2s;
 }
 
 .restartBtn:hover {
-  background: #16a34a;
+  background: #5a3e10;
 }
