@@ -12,6 +12,7 @@ interface CardState {
   phase: Phase;
   correct: string | null;
   wrongFlash: string | null;
+  fadingOut: boolean;
 }
 
 const PAIR = 2;
@@ -20,7 +21,7 @@ export default function FlipCardGame({ cards }: { cards: FlipCardData[] }) {
   const totalPairs = Math.ceil(cards.length / PAIR);
 
   const [states, setStates] = useState<CardState[]>(() =>
-    cards.map(() => ({ phase: 'front', correct: null, wrongFlash: null }))
+    cards.map(() => ({ phase: 'front', correct: null, wrongFlash: null, fadingOut: false }))
   );
   const [pairIdx, setPairIdx] = useState(0);
   const [completed, setCompleted] = useState<Set<number>>(new Set());
@@ -50,6 +51,13 @@ export default function FlipCardGame({ cards }: { cards: FlipCardData[] }) {
       playCorrectSound();
       patch(idx, { correct: opt });
       if (!completed.has(idx)) setScore((n) => n + 1);
+      setTimeout(() => {
+        patch(idx, { fadingOut: true });
+        setTimeout(() => {
+          patch(idx, { phase: 'explanation', fadingOut: false });
+          setCompleted((prev) => new Set([...prev, idx]));
+        }, 450);
+      }, 1100);
     } else {
       playWrongSound();
       patch(idx, { wrongFlash: opt });
@@ -78,7 +86,7 @@ export default function FlipCardGame({ cards }: { cards: FlipCardData[] }) {
   }
 
   function handleRestart() {
-    setStates(cards.map(() => ({ phase: 'front', correct: null, wrongFlash: null })));
+    setStates(cards.map(() => ({ phase: 'front', correct: null, wrongFlash: null, fadingOut: false })));
     setPairIdx(0);
     setCompleted(new Set());
     setScore(0);
@@ -172,41 +180,42 @@ export default function FlipCardGame({ cards }: { cards: FlipCardData[] }) {
 
                     {/* BACK */}
                     <div className={`${styles.face} ${styles.back}`}>
-                      {s.phase === 'explanation' ? (
-                        <>
-                          <div className={styles.explanationTitle}>{card.correctAnswer}</div>
-                          <div className={styles.explanationBody}>{card.explanation}</div>
-                          <button className={styles.flipLink} onClick={() => handleFlipLink(idx)}>
-                            Click here to flip card
-                          </button>
-                        </>
-                      ) : (
-                        <>
-                          <div className={styles.question}>{card.question}</div>
-                          <div className={styles.options}>
-                            {card.options.map((opt) => {
-                              let cls = styles.optionBtn;
-                              if (s.correct === opt) cls = `${styles.optionBtn} ${styles.optionCorrect}`;
-                              else if (s.wrongFlash === opt) cls = `${styles.optionBtn} ${styles.optionWrong}`;
-                              return (
-                                <button
-                                  key={opt}
-                                  className={cls}
-                                  onClick={() => handleSelect(idx, opt)}
-                                  disabled={s.correct !== null || s.wrongFlash !== null}
-                                >
-                                  {opt}
-                                </button>
-                              );
-                            })}
+                      <div className={`${styles.backContent}${s.fadingOut ? ` ${styles.backContentFadeOut}` : ''}`}>
+                        {s.phase === 'explanation' ? (
+                          <div className={styles.backContentFadeIn}>
+                            <div className={styles.explanationTitle}>{card.correctAnswer}</div>
+                            <div className={styles.explanationBody}>{card.explanation}</div>
                           </div>
-                          {s.correct !== null && <div className={styles.correctFeedback}>Correct! ✨</div>}
-                          {s.wrongFlash !== null && <div className={styles.wrongFeedback}>Try again</div>}
-                          <button className={styles.flipLink} onClick={() => handleFlipLink(idx)}>
-                            Click here to flip card
-                          </button>
-                        </>
-                      )}
+                        ) : (
+                          <>
+                            <div className={styles.question}>{card.question}</div>
+                            <div className={styles.options}>
+                              {card.options.map((opt) => {
+                                let cls = styles.optionBtn;
+                                if (s.correct === opt) cls = `${styles.optionBtn} ${styles.optionCorrect}`;
+                                else if (s.wrongFlash === opt) cls = `${styles.optionBtn} ${styles.optionWrong}`;
+                                return (
+                                  <button
+                                    key={opt}
+                                    className={cls}
+                                    onClick={() => handleSelect(idx, opt)}
+                                    disabled={s.correct !== null || s.wrongFlash !== null}
+                                  >
+                                    {opt}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                            {s.correct !== null && <div className={styles.correctFeedback}>Correct! ✨</div>}
+                            {s.wrongFlash !== null && <div className={styles.wrongFeedback}>Try again</div>}
+                            {s.correct === null && (
+                              <button className={styles.flipLink} onClick={() => handleFlipLink(idx)}>
+                                Click here to flip card
+                              </button>
+                            )}
+                          </>
+                        )}
+                      </div>
                     </div>
 
                   </div>

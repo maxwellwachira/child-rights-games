@@ -133,19 +133,34 @@ export const matchResponsibilities: DragMatchItem[] = [
   {
     id: 1,
     term: 'Caring about your family',
-    description: 'Children should be kind and helpful to their family. This means listening to parents and caregivers, helping in small ways at home, and showing respect for older people (like grandparents).',
+    description: 'Children should be kind and helpful to their family. This means:',
+    bullets: [
+      'listening to parents and caregivers',
+      'helping in small ways at home',
+      'showing respect for older people (like grandparents)',
+    ],
     imageSrc: '/game_assets/caring_about_your_family.png',
   },
   {
     id: 2,
     term: 'Treating others with respect',
-    description: 'Children should treat everyone kindly and fairly, no matter who they are. This means not hurting others, speaking politely, and respecting other people\'s beliefs, differences, and rights.',
+    description: 'Children should treat everyone kindly and fairly, no matter who they are. This means:',
+    bullets: [
+      'not hurting others',
+      'speaking politely',
+      "respecting other people's beliefs, differences, and rights",
+    ],
     imageSrc: '/game_assets/treating_others_respect.png',
   },
   {
     id: 3,
     term: 'Protecting the environment',
-    description: 'Children should try to look after nature. This means not wasting water or food, keeping your surroundings clean, and caring for animals and plants.',
+    description: 'Children should try to look after nature. This means:',
+    bullets: [
+      'not wasting water or food',
+      'keeping your surroundings clean',
+      'caring for animals and plants',
+    ],
     imageSrc: '/game_assets/protecting_the_environment.png',
   },
 ];

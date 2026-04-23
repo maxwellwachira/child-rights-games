@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { Fragment, useState, useMemo } from 'react';
 import type { DragMatchItem } from '@/types';
 import { playCorrectSound, playWrongSound } from '@/utils/sounds';
 import styles from './DragMatchGame.module.css';
@@ -21,11 +21,24 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
+function DescBody({ item }: { item: DragMatchItem }) {
+  if (item.bullets && item.bullets.length > 0) {
+    return (
+      <div className={styles.descContent}>
+        <p className={styles.descIntro}>{item.description}</p>
+        <ul className={styles.descBullets}>
+          {item.bullets.map((b, i) => <li key={i}>{b}</li>)}
+        </ul>
+      </div>
+    );
+  }
+  return <>{item.description}</>;
+}
+
 export default function DragMatchGame({ title, subtitle, items, variant = 'text' }: Props) {
   const isImageVariant = variant === 'image';
   const isPeachVariant = variant === 'peach';
 
-  // Image variant: terms in original order; text/peach: shuffled
   const displayTerms = useMemo(
     () => (isImageVariant ? [...items].sort((a, b) => a.id - b.id) : shuffle(items)),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -53,7 +66,7 @@ export default function DragMatchGame({ title, subtitle, items, variant = 'text'
     const termItem = items.find((x) => x.id === selectedTerm)!;
     const descItem = items.find((x) => x.id === id)!;
 
-    if (termItem.description === descItem.description) {
+    if (termItem.id === descItem.id) {
       playCorrectSound();
       setMatches((m) => ({ ...m, [selectedTerm]: id }));
       setSelectedTerm(null);
@@ -98,105 +111,127 @@ export default function DragMatchGame({ title, subtitle, items, variant = 'text'
       <h1 className={styles.heading}>{title}</h1>
       {subtitle && <p className={styles.subheading}>{subtitle}</p>}
 
-      <div
-        className={`${styles.layout} ${isImageVariant ? styles.layoutImage : ''}`}
-      >
-        {/* Terms column */}
-        <div className={styles.column}>
-          {displayTerms.map((item) => {
-            const isMatched = matchedTermIds.has(item.id);
-            const isSelected = selectedTerm === item.id;
-            const isWrong = wrongPair?.[0] === item.id;
+      {isImageVariant ? (
+        <div className={`${styles.layout} ${styles.layoutImage}`}>
+          {displayTerms.map((termItem, index) => {
+            const descItem = shuffledDescs[index];
 
-            if (isImageVariant) {
-              let tileCls = styles.imageTile;
-              if (isMatched) tileCls = `${styles.imageTile} ${styles.imageTileMatched}`;
-              else if (isWrong) tileCls = `${styles.imageTile} ${styles.imageTileWrong}`;
-              else if (isSelected) tileCls = `${styles.imageTile} ${styles.imageTileSelected}`;
+            const termIsMatched = matchedTermIds.has(termItem.id);
+            const termIsSelected = selectedTerm === termItem.id;
+            const termIsWrong = wrongPair?.[0] === termItem.id;
 
-              return (
+            let tileCls = styles.imageTile;
+            if (termIsMatched) tileCls = `${styles.imageTile} ${styles.imageTileMatched}`;
+            else if (termIsWrong) tileCls = `${styles.imageTile} ${styles.imageTileWrong}`;
+            else if (termIsSelected) tileCls = `${styles.imageTile} ${styles.imageTileSelected}`;
+
+            const descIsMatched = matchedDescIds.has(descItem.id);
+            const descIsWrong = wrongPair?.[1] === descItem.id;
+
+            let descCls = styles.descBeige;
+            if (descIsMatched) descCls = `${styles.descBeige} ${styles.descMatched}`;
+            else if (descIsWrong) descCls = `${styles.descBeige} ${styles.descWrong}`;
+
+            return (
+              <Fragment key={termItem.id}>
                 <div
-                  key={item.id}
                   className={tileCls}
-                  onClick={() => !isMatched && handleTermClick(item.id)}
+                  onClick={() => !termIsMatched && handleTermClick(termItem.id)}
                   role="button"
-                  tabIndex={isMatched ? -1 : 0}
+                  tabIndex={termIsMatched ? -1 : 0}
                   onKeyDown={(e) =>
-                    e.key === 'Enter' && !isMatched && handleTermClick(item.id)
+                    e.key === 'Enter' && !termIsMatched && handleTermClick(termItem.id)
                   }
                 >
                   <div className={styles.tileImgArea}>
-                    {item.imageSrc ? (
+                    {termItem.imageSrc ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
-                        src={item.imageSrc}
-                        alt={item.term}
+                        src={termItem.imageSrc}
+                        alt={termItem.term}
                         className={styles.tileImg}
                       />
                     ) : (
                       <div className={styles.tilePlaceholder}>
-                        <span className={styles.tilePlaceholderText}>{item.term}</span>
+                        <span className={styles.tilePlaceholderText}>{termItem.term}</span>
                       </div>
                     )}
                   </div>
-                  <div className={styles.tileLabel}>{item.term}</div>
+                  <div className={styles.tileLabel}>{termItem.term}</div>
+                </div>
+
+                <div
+                  className={descCls}
+                  onClick={() => !descIsMatched && handleDescClick(descItem.id)}
+                  role="button"
+                  tabIndex={descIsMatched ? -1 : 0}
+                  onKeyDown={(e) =>
+                    e.key === 'Enter' && !descIsMatched && handleDescClick(descItem.id)
+                  }
+                >
+                  <DescBody item={descItem} />
+                </div>
+              </Fragment>
+            );
+          })}
+        </div>
+      ) : (
+        <div className={styles.layout}>
+          {/* Terms column */}
+          <div className={styles.column}>
+            {displayTerms.map((item) => {
+              const isMatched = matchedTermIds.has(item.id);
+              const isSelected = selectedTerm === item.id;
+              const isWrong = wrongPair?.[0] === item.id;
+
+              const baseTermCls = isPeachVariant ? styles.termPeach : styles.termBtn;
+              let termCls = baseTermCls;
+              if (isMatched) termCls = `${baseTermCls} ${styles.termMatched}`;
+              else if (isWrong) termCls = `${baseTermCls} ${styles.termWrong}`;
+              else if (isSelected) termCls = `${baseTermCls} ${styles.termSelected}`;
+
+              return (
+                <button
+                  key={item.id}
+                  className={termCls}
+                  onClick={() => handleTermClick(item.id)}
+                  disabled={isMatched}
+                >
+                  {item.term}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Descriptions column */}
+          <div className={styles.column}>
+            {shuffledDescs.map((item) => {
+              const isMatched = matchedDescIds.has(item.id);
+              const isWrong = wrongPair?.[1] === item.id;
+
+              const baseDescCls = isPeachVariant ? styles.descPeach : styles.descCard;
+              let descCls = baseDescCls;
+              if (isMatched) descCls = `${baseDescCls} ${styles.descMatched}`;
+              else if (isWrong) descCls = `${baseDescCls} ${styles.descWrong}`;
+
+              return (
+                <div
+                  key={item.id}
+                  className={descCls}
+                  onClick={() => !isMatched && handleDescClick(item.id)}
+                  role="button"
+                  tabIndex={isMatched ? -1 : 0}
+                  onKeyDown={(e) =>
+                    e.key === 'Enter' && !isMatched && handleDescClick(item.id)
+                  }
+                >
+                  {item.description}
                 </div>
               );
-            }
-
-            // Text or peach variant
-            const baseTermCls = isPeachVariant ? styles.termPeach : styles.termBtn;
-            let termCls = baseTermCls;
-            if (isMatched) termCls = `${baseTermCls} ${styles.termMatched}`;
-            else if (isWrong) termCls = `${baseTermCls} ${styles.termWrong}`;
-            else if (isSelected) termCls = `${baseTermCls} ${styles.termSelected}`;
-
-            return (
-              <button
-                key={item.id}
-                className={termCls}
-                onClick={() => handleTermClick(item.id)}
-                disabled={isMatched}
-              >
-                {item.term}
-              </button>
-            );
-          })}
+            })}
+          </div>
         </div>
-
-        {/* Descriptions column */}
-        <div className={styles.column}>
-          {shuffledDescs.map((item) => {
-            const isMatched = matchedDescIds.has(item.id);
-            const isWrong = wrongPair?.[1] === item.id;
-
-            const baseDescCls = isPeachVariant
-              ? styles.descPeach
-              : isImageVariant
-              ? styles.descBeige
-              : styles.descCard;
-
-            let descCls = baseDescCls;
-            if (isMatched) descCls = `${baseDescCls} ${styles.descMatched}`;
-            else if (isWrong) descCls = `${baseDescCls} ${styles.descWrong}`;
-
-            return (
-              <div
-                key={item.id}
-                className={descCls}
-                onClick={() => !isMatched && handleDescClick(item.id)}
-                role="button"
-                tabIndex={isMatched ? -1 : 0}
-                onKeyDown={(e) =>
-                  e.key === 'Enter' && !isMatched && handleDescClick(item.id)
-                }
-              >
-                {item.description}
-              </div>
-            );
-          })}
-        </div>
-      </div>
+      )}
 
       <div className={styles.actions}>
         <p className={styles.hint}>

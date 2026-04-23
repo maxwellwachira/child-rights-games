@@ -27,6 +27,7 @@ export interface DragMatchItem {
   term: string;
   description: string;
   imageSrc?: string;
+  bullets?: string[];
 }
 
 export type GameStatus = 'idle' | 'correct' | 'incorrect';
