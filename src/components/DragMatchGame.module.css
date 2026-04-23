@@ -24,9 +24,10 @@
 /* ── Two-column layout ── */
 .layout {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.25rem;
-  align-items: start;
+  grid-template-columns: 1fr 2fr;
+  column-gap: 3rem;
+  row-gap: 0.75rem;
+  align-items: stretch;
 }
 
 .layoutImage {
@@ -291,6 +292,46 @@
   text-align: center;
   padding: 0.65rem 0.75rem;
   line-height: 1.3;
+}
+
+/* ── Match line overlay ── */
+.lineContainer {
+  position: relative;
+}
+
+.lineSvg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 10;
+}
+
+@keyframes drawLine {
+  from { stroke-dashoffset: 3000; }
+  to   { stroke-dashoffset: 0; }
+}
+
+@keyframes popDot {
+  0%   { transform: scale(0); opacity: 0; }
+  60%  { transform: scale(1.4); opacity: 1; }
+  100% { transform: scale(1);   opacity: 1; }
+}
+
+.matchLine {
+  stroke-dasharray: 3000;
+  stroke-dashoffset: 0;
+  animation: drawLine 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: drop-shadow(0 0 3px rgba(34, 197, 94, 0.5));
+}
+
+.matchDot {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: popDot 0.3s ease-out 0.45s both;
+  filter: drop-shadow(0 0 4px rgba(34, 197, 94, 0.7));
 }
 
 /* ── Actions ── */

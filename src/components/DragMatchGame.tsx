@@ -1,6 +1,6 @@
 'use client';
 
-import { Fragment, useState, useMemo } from 'react';
+import { Fragment, useState, useMemo, useRef, useEffect, useReducer } from 'react';
 import type { DragMatchItem } from '@/types';
 import { playCorrectSound, playWrongSound } from '@/utils/sounds';
 import styles from './DragMatchGame.module.css';
@@ -50,6 +50,38 @@ export default function DragMatchGame({ title, subtitle, items, variant = 'text'
   const [matches, setMatches] = useState<Record<number, number>>({});
   const [wrongPair, setWrongPair] = useState<[number, number] | null>(null);
   const [checked, setChecked] = useState(false);
+
+  const lineContainerRef = useRef<HTMLDivElement>(null);
+  const termRefs = useRef<Map<number, HTMLButtonElement>>(new Map());
+  const descRefs = useRef<Map<number, HTMLDivElement>>(new Map());
+  const [, forceUpdate] = useReducer((n: number) => n + 1, 0);
+
+  useEffect(() => {
+    window.addEventListener('resize', forceUpdate);
+    return () => window.removeEventListener('resize', forceUpdate);
+  }, []);
+
+  function getLineData(termId: number, descId: number) {
+    const container = lineContainerRef.current;
+    const termEl = termRefs.current.get(termId);
+    const descEl = descRefs.current.get(descId);
+    if (!container || !termEl || !descEl) return null;
+
+    const cr = container.getBoundingClientRect();
+    const tr = termEl.getBoundingClientRect();
+    const dr = descEl.getBoundingClientRect();
+
+    const x1 = tr.right - cr.left;
+    const y1 = tr.top + tr.height / 2 - cr.top;
+    const x2 = dr.left - cr.left;
+    const y2 = dr.top + dr.height / 2 - cr.top;
+    const cp = (x2 - x1) * 0.45;
+
+    return {
+      path: `M ${x1} ${y1} C ${x1 + cp} ${y1} ${x2 - cp} ${y2} ${x2} ${y2}`,
+      x1, y1, x2, y2,
+    };
+  }
 
   const matchedTermIds = new Set(Object.keys(matches).map(Number));
   const matchedDescIds = new Set(Object.values(matches).map(Number));
@@ -176,60 +208,77 @@ export default function DragMatchGame({ title, subtitle, items, variant = 'text'
           })}
         </div>
       ) : (
-        <div className={styles.layout}>
-          {/* Terms column */}
-          <div className={styles.column}>
-            {displayTerms.map((item) => {
-              const isMatched = matchedTermIds.has(item.id);
-              const isSelected = selectedTerm === item.id;
-              const isWrong = wrongPair?.[0] === item.id;
+        <div ref={lineContainerRef} className={styles.lineContainer}>
+          <div className={styles.layout}>
+            {displayTerms.map((termItem, index) => {
+              const descItem = shuffledDescs[index];
+
+              const termIsMatched = matchedTermIds.has(termItem.id);
+              const termIsSelected = selectedTerm === termItem.id;
+              const termIsWrong = wrongPair?.[0] === termItem.id;
 
               const baseTermCls = isPeachVariant ? styles.termPeach : styles.termBtn;
               let termCls = baseTermCls;
-              if (isMatched) termCls = `${baseTermCls} ${styles.termMatched}`;
-              else if (isWrong) termCls = `${baseTermCls} ${styles.termWrong}`;
-              else if (isSelected) termCls = `${baseTermCls} ${styles.termSelected}`;
+              if (termIsMatched) termCls = `${baseTermCls} ${styles.termMatched}`;
+              else if (termIsWrong) termCls = `${baseTermCls} ${styles.termWrong}`;
+              else if (termIsSelected) termCls = `${baseTermCls} ${styles.termSelected}`;
 
-              return (
-                <button
-                  key={item.id}
-                  className={termCls}
-                  onClick={() => handleTermClick(item.id)}
-                  disabled={isMatched}
-                >
-                  {item.term}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Descriptions column */}
-          <div className={styles.column}>
-            {shuffledDescs.map((item) => {
-              const isMatched = matchedDescIds.has(item.id);
-              const isWrong = wrongPair?.[1] === item.id;
+              const descIsMatched = matchedDescIds.has(descItem.id);
+              const descIsWrong = wrongPair?.[1] === descItem.id;
 
               const baseDescCls = isPeachVariant ? styles.descPeach : styles.descCard;
               let descCls = baseDescCls;
-              if (isMatched) descCls = `${baseDescCls} ${styles.descMatched}`;
-              else if (isWrong) descCls = `${baseDescCls} ${styles.descWrong}`;
+              if (descIsMatched) descCls = `${baseDescCls} ${styles.descMatched}`;
+              else if (descIsWrong) descCls = `${baseDescCls} ${styles.descWrong}`;
 
               return (
-                <div
-                  key={item.id}
-                  className={descCls}
-                  onClick={() => !isMatched && handleDescClick(item.id)}
-                  role="button"
-                  tabIndex={isMatched ? -1 : 0}
-                  onKeyDown={(e) =>
-                    e.key === 'Enter' && !isMatched && handleDescClick(item.id)
-                  }
-                >
-                  {item.description}
-                </div>
+                <Fragment key={termItem.id}>
+                  <button
+                    ref={(el) => { if (el) termRefs.current.set(termItem.id, el); else termRefs.current.delete(termItem.id); }}
+                    className={termCls}
+                    onClick={() => handleTermClick(termItem.id)}
+                    disabled={termIsMatched}
+                  >
+                    {termItem.term}
+                  </button>
+                  <div
+                    ref={(el) => { if (el) descRefs.current.set(descItem.id, el); else descRefs.current.delete(descItem.id); }}
+                    className={descCls}
+                    onClick={() => !descIsMatched && handleDescClick(descItem.id)}
+                    role="button"
+                    tabIndex={descIsMatched ? -1 : 0}
+                    onKeyDown={(e) =>
+                      e.key === 'Enter' && !descIsMatched && handleDescClick(descItem.id)
+                    }
+                  >
+                    {descItem.description}
+                  </div>
+                </Fragment>
               );
             })}
           </div>
+
+          <svg className={styles.lineSvg} aria-hidden="true">
+            {Object.entries(matches).map(([termIdStr, descId]) => {
+              const data = getLineData(Number(termIdStr), descId);
+              if (!data) return null;
+              const { path, x1, y1, x2, y2 } = data;
+              return (
+                <g key={termIdStr}>
+                  <path
+                    className={styles.matchLine}
+                    d={path}
+                    fill="none"
+                    stroke="#22c55e"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                  />
+                  <circle cx={x1} cy={y1} r="5" fill="#22c55e" className={styles.matchDot} />
+                  <circle cx={x2} cy={y2} r="5" fill="#22c55e" className={styles.matchDot} />
+                </g>
+              );
+            })}
+          </svg>
         </div>
       )}
 

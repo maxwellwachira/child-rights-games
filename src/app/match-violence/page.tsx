@@ -7,7 +7,7 @@ export default function MatchViolencePage() {
       title="Match the types of violence"
       subtitle="Match each type of violence to the right description."
       items={matchViolenceItems}
-      variant="peach"
+      variant="text"
     />
   );
 }
