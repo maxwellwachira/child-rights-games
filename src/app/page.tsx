@@ -3,11 +3,6 @@ import styles from './page.module.css';
 
 const games = [
   {
-    href: '/flip-cards',
-    title: 'Treasure Hunt',
-    desc: 'Can you identify all of the child rights? Click the treasure chest to play.',
-  },
-  {
     href: '/match-rights',
     title: 'Match the Rights',
     desc: 'Read each description and pick the child right it describes.',
@@ -31,6 +26,11 @@ const games = [
     href: '/match-rights-protection',
     title: "Children's Rights",
     desc: 'Match each right to the protection it gives you.',
+  },
+  {
+    href: '/flip-cards',
+    title: 'Treasure Hunt',
+    desc: 'Can you identify all of the child rights? Click the treasure chest to play.',
   },
 ];
 
