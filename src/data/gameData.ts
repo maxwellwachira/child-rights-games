@@ -1,4 +1,12 @@
-import type { FlipCardData, MatchItem, QuizQuestion, DragMatchItem } from '@/types';
+import type {
+  FlipCardData,
+  MatchItem,
+  QuizQuestion,
+  DragMatchItem,
+  SafeUnsafeScenario,
+  StoryQuestion,
+  LawCase,
+} from '@/types';
 
 export const flipCards: FlipCardData[] = [
   {
@@ -246,6 +254,362 @@ export const matchViolenceItems: DragMatchItem[] = [
     id: 6,
     term: 'Harmful cultural practices',
     description: 'Child marriage, female genital mutilation and cutting, child labour.',
+  },
+];
+
+export const safeUnsafeScenarios: SafeUnsafeScenario[] = [
+  {
+    id: 1,
+    category: 'HOME',
+    imageSrc: '/game_assets/sou_home_cousin.png',
+    imageAlt: 'A younger child sitting with an older cousin who is talking to them',
+    prompt: 'An older cousin tells you to sit on their lap, but you feel uncomfortable.',
+    answer: 'unsafe',
+    explanation:
+      'Any touch that makes you feel uncomfortable is unsafe even if the person is a relative. You should say no and tell a trusted adult.',
+  },
+  {
+    id: 2,
+    category: 'HOME',
+    imageSrc: '/game_assets/sou_home_parent_shouting.png',
+    imageAlt: 'A child looking sad while an adult shouts in the background',
+    prompt: 'Your parent shouts at you loudly every day and calls you names.',
+    answer: 'unsafe',
+    explanation:
+      'Constant shouting and name-calling can harm your mental health and self-esteem. You deserve to be treated with respect.',
+  },
+  {
+    id: 3,
+    category: 'HOME',
+    imageSrc: '/game_assets/sou_home_grandma_medicine.png',
+    imageAlt: 'A grandmother caring for a sick child',
+    prompt: 'Your grandma reminds you to take your medicine when you are sick.',
+    answer: 'safe',
+    explanation:
+      'Caring adults remind you to take care of your health. Being looked after when you are sick is part of your right to health care.',
+  },
+  {
+    id: 4,
+    category: 'HOME',
+    imageSrc: '/game_assets/sou_home_threat.png',
+    imageAlt: 'An adult speaking sternly to a child',
+    prompt: 'An adult threatens you, saying, "If you tell anyone, I will hurt you."',
+    answer: 'unsafe',
+    explanation:
+      'Any threat to hurt you is abuse and puts you in danger. You should tell an adult immediately even if you feel scared.',
+  },
+  {
+    id: 5,
+    category: 'HOME',
+    imageSrc: '/game_assets/sou_home_relative_pickup.png',
+    imageAlt: 'A relative meeting a child at the school gate',
+    prompt: 'A relative picks you up from school because your parent asked them to.',
+    answer: 'safe',
+    explanation:
+      'When a parent has arranged for a trusted relative to pick you up, this is a safe and planned situation.',
+  },
+
+  {
+    id: 6,
+    category: 'SCHOOL',
+    imageSrc: '/game_assets/sou_school_teacher_praise.png',
+    imageAlt: 'A teacher high-fiving a happy student in class',
+    prompt: 'A teacher praises you for your hard work in class.',
+    answer: 'safe',
+    explanation:
+      'Encouragement and praise from a teacher is a kind, healthy way of supporting your learning.',
+  },
+  {
+    id: 7,
+    category: 'SCHOOL',
+    imageSrc: '/game_assets/sou_school_bullying.png',
+    imageAlt: 'A group of pupils ignoring or teasing a child sitting alone',
+    prompt: 'Other children push you around in the corridor and laugh when you fall.',
+    answer: 'unsafe',
+    explanation:
+      'Pushing someone can cause injuries and is never okay, and laughing when someone is hurt is unkind. This is bullying.',
+  },
+  {
+    id: 8,
+    category: 'SCHOOL',
+    imageSrc: '/game_assets/sou_school_prefect.png',
+    imageAlt: 'A prefect talking respectfully with another student',
+    prompt: 'A prefect takes your book politely so they can note down your name for duty.',
+    answer: 'safe',
+    explanation:
+      'A prefect doing their job in a polite, respectful way is part of normal school life.',
+  },
+  {
+    id: 9,
+    category: 'SCHOOL',
+    imageSrc: '/game_assets/sou_school_teacher_unsafe.png',
+    imageAlt: 'A child looking worried inside an empty classroom',
+    prompt:
+      'A teacher tells you to stay behind alone in the classroom and then tries to touch your private parts.',
+    answer: 'unsafe',
+    explanation:
+      "Any attempt to touch a child's private parts is abuse and always wrong. Asking you to stay behind alone can be a tactic to prevent others from seeing or helping. Tell a trusted adult immediately.",
+  },
+  {
+    id: 10,
+    category: 'SCHOOL',
+    imageSrc: '/game_assets/sou_school_friends_project.png',
+    imageAlt: 'A group of students working together on a project',
+    prompt: 'Your group of friends includes you in a class project and listens to your ideas.',
+    answer: 'safe',
+    explanation:
+      'Friends who include you and listen to your ideas help you feel respected and valued.',
+  },
+
+  {
+    id: 11,
+    category: 'COMMUNITY',
+    imageSrc: '/game_assets/sou_community_boda.png',
+    imageAlt: 'A boda boda rider stopping near a child by the road',
+    prompt: "A boda boda rider you don't know offers to give you a free ride home.",
+    answer: 'unsafe',
+    explanation:
+      'Getting on a boda boda with a stranger can lead to danger, including kidnapping, exploitation, or injury. Offering free things like rides or sweets is a common unsafe way adults use to gain trust with children.',
+  },
+  {
+    id: 12,
+    category: 'COMMUNITY',
+    imageSrc: '/game_assets/sou_community_shopkeeper.png',
+    imageAlt: 'A shopkeeper giving change to a child at a kiosk',
+    prompt: 'A shopkeeper gives you change politely after buying something.',
+    answer: 'safe',
+    explanation:
+      'A polite, normal interaction with a shopkeeper as part of buying something is safe.',
+  },
+  {
+    id: 13,
+    category: 'COMMUNITY',
+    imageSrc: '/game_assets/sou_community_neighbour.png',
+    imageAlt: 'A neighbour helping a child carry a water container',
+    prompt: 'Your neighbour helps you carry water when you are tired.',
+    answer: 'safe',
+    explanation:
+      'A kind neighbour helping with a simple task in the open is part of a caring community.',
+  },
+  {
+    id: 14,
+    category: 'COMMUNITY',
+    imageSrc: '/game_assets/sou_community_abandoned.png',
+    imageAlt: 'Children near an empty area away from adults',
+    prompt: 'Someone your age asks you to play in an abandoned building.',
+    answer: 'unsafe',
+    explanation:
+      'Abandoned buildings can have broken glass, broken floors, exposed wires, holes or gangs hiding inside. There is no responsible adult nearby to help if something goes wrong. Even when the person is your age, children can still be led into unsafe situations.',
+  },
+  {
+    id: 15,
+    category: 'COMMUNITY',
+    imageSrc: '/game_assets/sou_community_stranger.png',
+    imageAlt: 'A child standing in an open area near a stranger',
+    prompt: 'A friend keeps pulling at your clothes even after you tell them to stop.',
+    answer: 'unsafe',
+    explanation:
+      "This is boundary-breaking, harassment, and bullying, even though it involves a friend. Pulling someone's clothes can be embarrassing, invasive, and can become sexual harassment.",
+  },
+
+  {
+    id: 16,
+    category: 'ONLINE',
+    imageSrc: '/game_assets/sou_online_friend_request.png',
+    imageAlt: 'A child looking at a phone screen',
+    prompt: "You receive a friend request from someone you don't know.",
+    answer: 'unsafe',
+    explanation:
+      'Online profiles can be fake or misleading. Strangers may try to gain trust to ask for personal information, photos, or favours later.',
+  },
+  {
+    id: 17,
+    category: 'ONLINE',
+    imageSrc: '/game_assets/sou_online_video_call.png',
+    imageAlt: 'A child on a video call with a friend',
+    prompt: 'You video call your best friend to discuss homework.',
+    answer: 'safe',
+    explanation:
+      'Talking with a real friend you know to do schoolwork together is a healthy use of technology.',
+  },
+  {
+    id: 18,
+    category: 'ONLINE',
+    imageSrc: '/game_assets/sou_online_photo_request.png',
+    imageAlt: 'A child looking worried at a phone screen in the dark',
+    prompt: 'Someone online asks you to send a photo of your body or private parts.',
+    answer: 'unsafe',
+    explanation:
+      'Asking for photos of your body or private parts is wrong. Once sent, photos can be saved, shared, or used again without your control. Tell a trusted adult right away.',
+  },
+  {
+    id: 19,
+    category: 'ONLINE',
+    imageSrc: '/game_assets/sou_online_gamer.png',
+    imageAlt: 'A child playing a game on a laptop',
+    prompt: 'A gamer you met online asks where you live and what school you attend.',
+    answer: 'unsafe',
+    explanation:
+      'Sharing personal information online with strangers can put you at risk of being found or harmed.',
+  },
+  {
+    id: 20,
+    category: 'ONLINE',
+    imageSrc: '/game_assets/sou_online_scary_message.png',
+    imageAlt: 'A child showing a phone screen',
+    prompt: 'You block someone who is sending you rude or scary messages.',
+    answer: 'safe',
+    explanation:
+      'Blocking someone who is being rude or threatening is a smart, safe way to protect yourself. You can also tell a trusted adult.',
+  },
+];
+
+export const childMarriageStory = {
+  title: '#SPOTitSTOPit Child Marriage',
+  imageSrc: '/game_assets/neema_story.png',
+  imageAlt: 'A 14-year-old girl named Neema walking home with her school books',
+  paragraphs: [
+    'Neema is 14 years old. She loves school and dreams of becoming a nurse. One evening she comes home and overhears her parents talking with an older man from the village.',
+    'They are arranging for Neema to marry him next month. Neema has never agreed to this. She feels scared and confused, and does not know what to do.',
+  ],
+};
+
+export const childMarriageQuestions: StoryQuestion[] = [
+  {
+    id: 1,
+    question: 'How do you think Neema feels in this situation?',
+    options: [
+      'Happy because she is getting married',
+      "Scared and confused because she didn't agree to the marriage",
+      'Excited because she will help her family',
+      "Indifferent because it doesn't affect her",
+    ],
+    correctAnswers: ["Scared and confused because she didn't agree to the marriage"],
+  },
+  {
+    id: 2,
+    question: 'Like all children in Kenya, Neema has rights. Which rights might be violated in this story?',
+    options: [
+      'Right to education',
+      'Right to choose',
+      'Right to be free from harmful practices',
+      'Right to play video games',
+      'Right to protection',
+    ],
+    correctAnswers: [
+      'Right to education',
+      'Right to choose',
+      'Right to be free from harmful practices',
+      'Right to protection',
+    ],
+    multi: true,
+  },
+  {
+    id: 3,
+    question: 'What could Neema do if she feels unsafe or forced?',
+    options: [
+      'Keep it a secret and hope it goes away',
+      "Tell a trusted adult, teacher, chief, children's officer, call 116",
+      'Run away without telling anyone',
+      'Talk to her friend and do nothing else',
+    ],
+    correctAnswers: ["Tell a trusted adult, teacher, chief, children's officer, call 116"],
+  },
+  {
+    id: 4,
+    question: 'Who could help Neema in her school or community? Select all that are right.',
+    options: [
+      'Teacher or school counselor',
+      "Chief or children's officer",
+      'Trusted relatives or neighbours',
+      'Strangers online',
+      'Her friends who can support her',
+    ],
+    correctAnswers: [
+      'Teacher or school counselor',
+      "Chief or children's officer",
+      'Trusted relatives or neighbours',
+      'Her friends who can support her',
+    ],
+    multi: true,
+  },
+  {
+    id: 5,
+    question: 'What advice would you give Neema if you were her friend?',
+    options: [
+      "Tell her it's fine and she should just get married",
+      'Encourage her to speak to a trusted adult',
+      'Tell her to run away immediately alone',
+      'Remind her of her rights and support her safely',
+    ],
+    correctAnswers: [
+      'Encourage her to speak to a trusted adult',
+      'Remind her of her rights and support her safely',
+    ],
+    multi: true,
+  },
+  {
+    id: 6,
+    question: 'Why is child marriage harmful for girls and boys? Select all that are right.',
+    options: [
+      'Stops children from continuing education',
+      'Can lead to health risks, especially early pregnancy',
+      'Causes emotional and psychological harm',
+      'Helps children earn money faster',
+      'Takes away freedom to choose and can lead to poverty or abuse',
+    ],
+    correctAnswers: [
+      'Stops children from continuing education',
+      'Can lead to health risks, especially early pregnancy',
+      'Causes emotional and psychological harm',
+      'Takes away freedom to choose and can lead to poverty or abuse',
+    ],
+    multi: true,
+  },
+];
+
+export const lawDetectivesCases: LawCase[] = [
+  {
+    id: 1,
+    caseText: 'A child is left alone at home without care for several days.',
+    lawTitle: 'Children Act (2022)',
+    lawDescription:
+      'Protects children from all forms of abuse, neglect, exploitation, and harmful practices. Provides for child protection services and the reporting of abuse. Ensures that children in conflict with the law are treated differently from adults.',
+  },
+  {
+    id: 2,
+    caseText: 'Someone online is sending sexual messages to a girl and asking her for pictures.',
+    lawTitle: 'Sexual Offences Act (2014)',
+    lawDescription:
+      'Criminalizes sexual abuse, exploitation, harassment, and grooming of children. Provides strict penalties for offenders.',
+  },
+  {
+    id: 3,
+    caseText: "A teacher hears that a girl's aunt is encouraging her to undergo female genital mutilation.",
+    lawTitle: 'Prohibition of Female Genital Mutilation Act',
+    lawDescription:
+      'Protects girls from female genital mutilation. Criminalizes performing, assisting, or promoting female genital mutilation.',
+  },
+  {
+    id: 4,
+    caseText: 'A 13-year-old is working long hours as a shamba boy and missing school.',
+    lawTitle: 'Employment Act & Labour Laws',
+    lawDescription:
+      'Protect children from child labour, exploitation, and hazardous work.',
+  },
+  {
+    id: 5,
+    caseText: 'A stranger offers a child a job in the city but asks the child to travel alone.',
+    lawTitle: 'Counter Trafficking in Persons Act (2010, amended 2017)',
+    lawDescription:
+      'Protects children from human trafficking for labour, sexual exploitation, or other harmful purposes.',
+  },
+  {
+    id: 6,
+    caseText: 'A 15-year-old girl is being pressured to marry a much older man.',
+    lawTitle: 'The Marriage Act',
+    lawDescription:
+      'Makes it illegal for anyone under 18 to marry. Protects children, especially girls, from early marriage.',
   },
 ];
 

@@ -31,3 +31,30 @@ export interface DragMatchItem {
 }
 
 export type GameStatus = 'idle' | 'correct' | 'incorrect';
+
+export type SafeUnsafeCategory = 'HOME' | 'SCHOOL' | 'COMMUNITY' | 'ONLINE';
+
+export interface SafeUnsafeScenario {
+  id: number;
+  category: SafeUnsafeCategory;
+  imageSrc: string;
+  imageAlt: string;
+  prompt: string;
+  answer: 'safe' | 'unsafe';
+  explanation: string;
+}
+
+export interface StoryQuestion {
+  id: number;
+  question: string;
+  options: string[];
+  correctAnswers: string[];
+  multi?: boolean;
+}
+
+export interface LawCase {
+  id: number;
+  caseText: string;
+  lawTitle: string;
+  lawDescription: string;
+}

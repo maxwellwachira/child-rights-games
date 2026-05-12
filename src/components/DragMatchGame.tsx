@@ -231,6 +231,8 @@ export default function DragMatchGame({ title, subtitle, items, variant = 'text'
               if (descIsMatched) descCls = `${baseDescCls} ${styles.descMatched}`;
               else if (descIsWrong) descCls = `${baseDescCls} ${styles.descWrong}`;
 
+              const showFullOnTerm = termIsMatched && !isPeachVariant;
+
               return (
                 <Fragment key={termItem.id}>
                   <button
@@ -239,7 +241,10 @@ export default function DragMatchGame({ title, subtitle, items, variant = 'text'
                     onClick={() => handleTermClick(termItem.id)}
                     disabled={termIsMatched}
                   >
-                    {termItem.term}
+                    <span className={styles.termTitle}>{termItem.term}</span>
+                    {showFullOnTerm && (
+                      <span className={styles.termBody}>{termItem.description}</span>
+                    )}
                   </button>
                   <div
                     ref={(el) => { if (el) descRefs.current.set(descItem.id, el); else descRefs.current.delete(descItem.id); }}

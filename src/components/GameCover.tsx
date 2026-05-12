@@ -2,7 +2,7 @@
 
 import styles from './GameCover.module.css';
 
-export type CoverTheme = 'purple' | 'orange' | 'magenta';
+export type CoverTheme = 'purple' | 'orange' | 'magenta' | 'teal';
 
 interface Props {
   theme: CoverTheme;
@@ -18,6 +18,7 @@ const WAVES: Record<CoverTheme, string> = {
   purple: '/game_assets/wave_purple.svg',
   orange: '/game_assets/wave_orange.svg',
   magenta: '/game_assets/wave_magenta.svg',
+  teal: '/game_assets/wave_teal.svg',
 };
 
 export default function GameCover({

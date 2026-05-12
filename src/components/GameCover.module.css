@@ -107,6 +107,9 @@
 .theme_magenta .playBtn { background: #c2185b; }
 .theme_magenta .playBtn:hover { background: #9e1068; }
 
+.theme_teal .playBtn { background: #08979c; }
+.theme_teal .playBtn:hover { background: #006d75; }
+
 /* ── Responsive ── */
 @media (max-width: 720px) {
   .cover {
