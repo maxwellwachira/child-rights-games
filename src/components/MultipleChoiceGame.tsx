@@ -13,7 +13,7 @@ interface Props {
   title: string;
   subtitle?: string;
   items: Item[];
-  columns?: 1 | 2;
+  columns?: 1 | 2 | 3;
   showLetterBadge?: boolean;
 }
 
@@ -41,16 +41,16 @@ export default function MultipleChoiceGame({
   const item = items[current];
 
   function handleSelect(option: string) {
-    if (correct !== null || wrongFlash !== null) return;
+    if (correct !== null) return;
     if (option === item.correctAnswer) {
       playCorrectSound();
       setCorrect(option);
+      setWrongFlash(null);
       if (!hadWrongAttempt) setScore((s) => s + 1);
     } else {
       playWrongSound();
       setHadWrongAttempt(true);
       setWrongFlash(option);
-      setTimeout(() => setWrongFlash(null), 800);
     }
   }
 
@@ -103,7 +103,10 @@ export default function MultipleChoiceGame({
 
       <div
         className={styles.options}
-        style={{ gridTemplateColumns: columns === 1 ? '1fr' : '1fr 1fr' }}
+        style={{
+          gridTemplateColumns:
+            columns === 1 ? '1fr' : columns === 3 ? '1fr 1fr 1fr' : '1fr 1fr',
+        }}
       >
         {item.options.map((opt, i) => {
           const isAnswerCorrect = opt === item.correctAnswer;
@@ -129,7 +132,7 @@ export default function MultipleChoiceGame({
               key={opt}
               className={optCls}
               onClick={() => handleSelect(opt)}
-              disabled={correct !== null || wrongFlash !== null}
+              disabled={correct !== null}
             >
               <span className={indicatorCls} aria-hidden="true">
                 {showLetterBadge ? LABELS[i] : ''}
@@ -142,10 +145,14 @@ export default function MultipleChoiceGame({
 
       {correct !== null && (
         <FeedbackBanner
+          kind="correct"
           onNext={handleNext}
           isLast={current + 1 >= items.length}
           variant={showLetterBadge ? 'quiz' : 'default'}
         />
+      )}
+      {correct === null && wrongFlash !== null && (
+        <FeedbackBanner kind="wrong" />
       )}
     </div>
   );

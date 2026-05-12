@@ -62,3 +62,15 @@
 .nextBtn:hover {
   opacity: 0.88;
 }
+
+.bannerWrong {
+  background: #DC2626;
+  justify-content: center;
+}
+
+.wrongText {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.02em;
+}

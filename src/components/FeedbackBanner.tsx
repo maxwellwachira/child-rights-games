@@ -4,12 +4,28 @@ import Image from 'next/image';
 import styles from './FeedbackBanner.module.css';
 
 interface Props {
-  onNext: () => void;
+  kind?: 'correct' | 'wrong';
+  onNext?: () => void;
   isLast?: boolean;
   variant?: 'default' | 'quiz';
 }
 
-export default function FeedbackBanner({ onNext, isLast, variant = 'default' }: Props) {
+export default function FeedbackBanner({
+  kind = 'correct',
+  onNext,
+  isLast,
+  variant = 'default',
+}: Props) {
+  if (kind === 'wrong') {
+    return (
+      <div className={`${styles.banner} ${styles.bannerWrong}`}>
+        <div className={styles.left}>
+          <span className={styles.wrongText}>Try again</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.banner}>
       <div className={styles.left}>
@@ -27,7 +43,10 @@ export default function FeedbackBanner({ onNext, isLast, variant = 'default' }: 
             <div className={styles.quizSub}>You successfully matched the correct term to the description</div>
           </div>
         ) : (
-          <span className={styles.correctText}>Correct!</span>
+          <div>
+            <div className={styles.quizTitle}>THAT&apos;S RIGHT!</div>
+            <div className={styles.quizSub}>You successfully matched the correct term to the description</div>
+          </div>
         )}
         <Image
           src="/Sparkle.svg"
@@ -38,9 +57,11 @@ export default function FeedbackBanner({ onNext, isLast, variant = 'default' }: 
           aria-hidden
         />
       </div>
-      <button className={styles.nextBtn} onClick={onNext}>
-        {isLast ? 'Finish' : 'Next →'}
-      </button>
+      {onNext && (
+        <button className={styles.nextBtn} onClick={onNext}>
+          {isLast ? 'Finish' : 'Next →'}
+        </button>
+      )}
     </div>
   );
 }

@@ -96,7 +96,7 @@ export default function FlipCardGame({ cards }: { cards: FlipCardData[] }) {
   if (done) {
     return (
       <div className={styles.page}>
-        <h1 className={styles.gameTitle}>Game: Treasure hunt!</h1>
+        <h1 className={styles.gameTitle}>Treasure hunt!</h1>
         <div className={styles.parchment}>
           <p className={styles.congratsTitle}>Congratulations!</p>
           <p className={styles.congratsMsg}>You have completed the treasure hunt</p>
@@ -122,10 +122,10 @@ export default function FlipCardGame({ cards }: { cards: FlipCardData[] }) {
 
   return (
     <div className={styles.page}>
-      <h1 className={styles.gameTitle}>Game: Treasure hunt!</h1>
+      <h1 className={styles.gameTitle}>Treasure hunt!</h1>
       <div className={styles.parchment}>
         <p className={styles.subtitle}>
-          Can you identify all of the child rights?&nbsp; Click on the treasure chest to play
+          Click on the treasure chest to play
         </p>
 
         {/* Pair progress dots */}
